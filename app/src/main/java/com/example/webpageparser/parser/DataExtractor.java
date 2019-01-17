@@ -3,18 +3,15 @@ package com.example.webpageparser.parser;
 import com.example.webpageparser.reader.SourceTextReader;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class DataExtractor {
 
-    private List<String> getEmails(Set<String> visitedLinks, String source, int depthLevel) throws IOException {
+    private void getEmails(Set<String> visitedLinks, String source, int depthLevel, Set<String> emails) throws IOException {
         if (visitedLinks.contains(source)) {
-            return Collections.emptyList();
+            return;
         }
         visitedLinks.add(source);
 
@@ -23,24 +20,22 @@ public class DataExtractor {
 
         List<String> currentPageText = reader.getTextAsList(source);
 
-        List<String> emails = parser.extractEmails(currentPageText);
+        parser.extractEmails(currentPageText, emails);
 
         if (depthLevel < 2) {
-            return emails;
+            return;
         }
 
-        List<String> linksOnCurrentPage = parser.extractLinks(currentPageText);
-        Stream<String> emailsStream = emails.stream();
+        Set<String> linksOnCurrentPage = parser.extractLinks(currentPageText);
 
         for (String link : linksOnCurrentPage) {
-            List<String> subPageEmails = getEmails(visitedLinks, link, depthLevel - 1);
-            emailsStream = Stream.concat(emailsStream, subPageEmails.stream());
+            getEmails(visitedLinks, link, depthLevel - 1, emails);
         }
-
-        return emailsStream.collect(Collectors.toList());
     }
 
-    public List<String> getEmails(String source, int depthLevel) throws IOException {
-        return getEmails(new HashSet<>(), source, depthLevel);
+    public Set<String> getEmails(String source, int depthLevel) throws IOException {
+        Set<String> emails = new HashSet<>();
+        getEmails(new HashSet<>(), source, depthLevel, emails);
+        return emails;
     }
 }

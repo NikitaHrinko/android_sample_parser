@@ -1,19 +1,15 @@
 package com.example.webpageparser;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.net.ConnectivityManager;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.webpageparser.exception.InvalidURLException;
 import com.example.webpageparser.exception.PageLoadingException;
@@ -21,10 +17,7 @@ import com.example.webpageparser.exception.PageReadingException;
 import com.example.webpageparser.parser.DataExtractor;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -77,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         DataExtractor dataExtractor = new DataExtractor();
-                        List<String> emails = null;
+                        Set<String> emails = null;
                         try {
                             emails = dataExtractor.getEmails(sourceLinkText, depth);
                         } catch (InvalidURLException e) {
@@ -100,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                             Message message = Message.obtain();
                             message.what = 1;
                             Bundle bundle = new Bundle();
-                            bundle.putString("emails", String.join("\n", new HashSet<>(emails)));
+                            bundle.putString("emails", String.join("\n", emails));
                             message.setData(bundle);
                             messageHandler.sendMessage(message);
                         }
