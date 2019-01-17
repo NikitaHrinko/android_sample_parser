@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">WebPageParser</string>
+    <string name="tv_greeting">Welcome to web-page parser</string>
+    <string name="tv_link_input_description">Input web-page address to parse</string>
+    <string name="tv_depth_input_description">Select how deep parser has to go</string>
+
+    <string name="ti_link_input_description">Web-page address</string>
+
+    <string name="btn_start">Start parsing the page</string>
+
+    <string-array name="s_depth_input_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+</resources>
