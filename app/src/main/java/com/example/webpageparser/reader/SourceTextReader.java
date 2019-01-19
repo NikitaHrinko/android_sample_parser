@@ -10,7 +10,6 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class SourceTextReader {
@@ -21,9 +20,9 @@ public class SourceTextReader {
         try {
             sourceUrl = new URL(source);
         } catch (MalformedURLException e) {
-//            throw new InvalidURLException(source, e);
-            e.printStackTrace();
-            return Collections.emptyList();
+            throw new InvalidURLException(source, e);
+//            e.printStackTrace();
+//            return Collections.emptyList();
         }
 
         BufferedReader in;
@@ -31,9 +30,9 @@ public class SourceTextReader {
             in = new BufferedReader(
                     new InputStreamReader(sourceUrl.openStream()));
         } catch (IOException e) {
-//            throw new PageLoadingException(source, e);
-            e.printStackTrace();
-            return Collections.emptyList();
+            throw new PageLoadingException(source, e);
+//            e.printStackTrace();
+//            return Collections.emptyList();
         }
 
         String inputLine;
@@ -42,9 +41,9 @@ public class SourceTextReader {
                 strings.add(inputLine);
             }
         } catch (IOException e) {
-//            throw new PageReadingException(source, e);
-            e.printStackTrace();
-            return Collections.emptyList();
+            throw new PageReadingException(source, e);
+//            e.printStackTrace();
+//            return Collections.emptyList();
         } finally {
             in.close();
         }

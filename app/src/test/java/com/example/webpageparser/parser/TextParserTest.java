@@ -3,7 +3,6 @@ package com.example.webpageparser.parser;
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -21,9 +20,8 @@ public class TextParserTest {
         // GIVEN
         List<String> expectedEmails = Arrays.asList("example@example.com", "email@example.com", "first@email.com");
         TextParser parser = new TextParser();
-        Set<String> results = new HashSet<>();
         // WHEN
-        parser.extractEmails(sampleData, results);
+        Set<String> results = parser.extractEmails(sampleData);
         // THEN
         assertEquals("Array sizes don't match", expectedEmails.size(), results.size());
         for (int i = 0; i < expectedEmails.size(); i++) {

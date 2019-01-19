@@ -8,18 +8,18 @@ import java.util.regex.Pattern;
 
 class TextParser {
 
-    void extractEmails(List<String> source, Set<String> emails) {
+    Set<String> extractEmails(List<String> source) {
         String emailPattern = "\\b([a-z0-9_.-]+)@([a-z0-9_.-]+[a-z])";
-        extractByPattern(source, emailPattern, emails);
+        return extractByPattern(source, emailPattern);
     }
 
     Set<String> extractLinks(List<String> source) {
         String linkPattern = "\\b((((https?|ftp|file)://)?(www|ftp|docs)[.])|((www|ftp|docs)[.]))[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
-        return extractByPattern(source, linkPattern, new HashSet<>());
+        return extractByPattern(source, linkPattern);
     }
 
-    Set<String> extractByPattern(List<String> source, String regexPattern, Set<String> matchList) {
-
+    Set<String> extractByPattern(List<String> source, String regexPattern) {
+        Set<String> matchList = new HashSet<>();
         Pattern pattern = Pattern.compile(regexPattern, Pattern.CASE_INSENSITIVE);
 
         for (String line : source) {
