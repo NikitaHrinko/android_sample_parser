@@ -13,4 +13,13 @@ public class MessageDispatcher {
         message.setData(bundle);
         messageHandler.sendMessage(message);
     }
+
+    public static void dispatch(Handler messageHandler, String key, float messageNumber) {
+        Message message = Message.obtain();
+        message.what = 1;
+        Bundle bundle = new Bundle();
+        bundle.putFloat(key, messageNumber);
+        message.setData(bundle);
+        messageHandler.sendMessage(message);
+    }
 }

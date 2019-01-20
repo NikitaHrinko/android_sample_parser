@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -23,8 +24,10 @@ public class MainActivity extends AppCompatActivity {
     protected Spinner spinnerDepthSelector;
     protected Button startButton;
     protected EditText sourceLink;
+    protected TextView progressStatus;
     protected TextView parsingResults;
     protected Thread processingThread;
+    protected ProgressBar progressBar;
 
     protected LinkedList<String> invalids;
 
@@ -32,21 +35,35 @@ public class MainActivity extends AppCompatActivity {
         public void handleMessage(Message message) {
             super.handleMessage(message);
             Bundle messageData = message.getData();
-            for (MessageType type : MessageType.ERRORS) {
-                String messageDataString = messageData.getString(type.toString());
+            for (String type : MessageType.ERRORS) {
+                String messageDataString = messageData.getString(type);
                 if (messageDataString != null && !messageDataString.isEmpty()) {
                     invalids.add(messageDataString);
                 }
             }
 
-            String emails = messageData.getString("emails");
+            final float noProgress = -1.0f;
+            float progressPercentage = messageData.getFloat(MessageType.PROGRESS_PERCENTAGE, noProgress);
+            if (progressPercentage != noProgress) {
+                int maxProgress = progressBar.getMax();
+                progressBar.setProgress(((int) (((float) maxProgress) * progressPercentage)));
+            }
+
+            String progressStatusText = messageData.getString(MessageType.PROGRESS_STATUS);
+            if (progressStatusText != null) {
+                progressStatus.setText(progressStatusText);
+            }
+
+            String emails = messageData.getString(MessageType.EMAILS);
             if (emails != null && !emails.isEmpty()) {
                 parsingResults.setText(emails);
-                processingThread = null;
+                progressStatus.setText("Finished");
+                progressBar.setProgress(progressBar.getMax());
                 if (invalids != null && !invalids.isEmpty()) {
                     showAlert("Errors encountered at the following pages",
                             String.join("\n", invalids));
                 }
+                processingThread = null;
             }
         }
     };
@@ -74,9 +91,13 @@ public class MainActivity extends AppCompatActivity {
 
         sourceLink = findViewById(R.id.sourceLink);
 
+        progressStatus = findViewById(R.id.textViewProgressStatus);
+
         parsingResults = findViewById(R.id.textViewParsingResults);
 
         startButton = findViewById(R.id.buttonStart);
+
+        progressBar = findViewById(R.id.progressBar);
 
         startButton.setOnClickListener(view -> {
             if (processingThread != null) {
@@ -88,11 +109,13 @@ public class MainActivity extends AppCompatActivity {
                 processingThread = new Thread() {
                     @Override
                     public void run() {
+                        MessageDispatcher.dispatch(messageHandler, MessageType.PROGRESS_PERCENTAGE, 0.0f);
+                        MessageDispatcher.dispatch(messageHandler, MessageType.PROGRESS_STATUS, "");
                         invalids = new LinkedList<>();
                         DataExtractor dataExtractor = new DataExtractor(messageHandler);
                         Set<String> emails = dataExtractor.getEmails(sourceLinkText, depth);
 
-                        MessageDispatcher.dispatch(messageHandler, "emails", String.join("\n", emails));
+                        MessageDispatcher.dispatch(messageHandler, MessageType.EMAILS, String.join("\n", emails));
                     }
                 };
                 processingThread.start();

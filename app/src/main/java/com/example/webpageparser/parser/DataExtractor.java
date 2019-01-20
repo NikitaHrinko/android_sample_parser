@@ -61,7 +61,11 @@ public class DataExtractor {
 
     public Set<String> getEmails(String source, int depthLevel) {
         TextParser parser = new TextParser();
+        MessageDispatcher.dispatch(messageHandler, MessageType.PROGRESS_STATUS, "Reading pages");
+        MessageDispatcher.dispatch(messageHandler, MessageType.PROGRESS_PERCENTAGE, 0.3f);
         List<String> fullText = getFullText(new HashSet<>(), source, depthLevel);
+        MessageDispatcher.dispatch(messageHandler, MessageType.PROGRESS_STATUS, "Parsing pages text");
+        MessageDispatcher.dispatch(messageHandler, MessageType.PROGRESS_PERCENTAGE, 0.6f);
         return parser.extractEmails(fullText);
     }
 
@@ -69,13 +73,13 @@ public class DataExtractor {
         String messageType;
 
         if (exception instanceof InvalidURLException) {
-            messageType = MessageType.INVALID.toString();
+            messageType = MessageType.INVALID;
         } else if (exception instanceof PageLoadingException) {
-            messageType = MessageType.LOADING.toString();
+            messageType = MessageType.LOADING;
         } else if (exception instanceof PageReadingException) {
-            messageType = MessageType.READING.toString();
+            messageType = MessageType.READING;
         } else {
-            messageType = MessageType.UNKNOWN.toString();
+            messageType = MessageType.UNKNOWN;
         }
 
         MessageDispatcher.dispatch(messageHandler, messageType, source);
