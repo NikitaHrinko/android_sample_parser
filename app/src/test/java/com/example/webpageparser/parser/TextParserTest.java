@@ -13,7 +13,7 @@ public class TextParserTest {
 
     private static final List<String> sampleData = Arrays.asList("Text text example@example.com, text text http://www.example.com text",
             "email@example.com. first@email.com Text https://docs.example.com, https://ftp.ex.com text text",
-            "Text text www.foofle.com, docs.foo.com text");
+            "Text text www.foofle.com, docs.foo.com text https://page.com");
 
     @Test
     public void extractEmailsTest() {
@@ -33,7 +33,7 @@ public class TextParserTest {
     @Test
     public void extractLinksTest() {
         // GIVEN
-        List<String> expectedLinks = Arrays.asList("http://www.example.com", "https://docs.example.com", "https://ftp.ex.com", "www.foofle.com", "docs.foo.com");
+        List<String> expectedLinks = Arrays.asList("http://www.example.com", "https://docs.example.com", "https://ftp.ex.com", "www.foofle.com", "docs.foo.com", "https://page.com");
         TextParser parser = new TextParser();
         // WHEN
         Set<String> results = parser.extractLinks(sampleData);

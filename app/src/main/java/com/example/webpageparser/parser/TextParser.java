@@ -14,7 +14,7 @@ class TextParser {
     }
 
     Set<String> extractLinks(List<String> source) {
-        String linkPattern = "\\b((((https?|ftp|file)://)?(www|ftp|docs)[.])|((www|ftp|docs)[.]))[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
+        String linkPattern = "\\b((((https?|ftp|file)://)((www|ftp|docs)[.])?)|((www|ftp|docs)[.]))[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
         return extractByPattern(source, linkPattern);
     }
 
