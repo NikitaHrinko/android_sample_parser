@@ -114,8 +114,11 @@ public class MainActivity extends AppCompatActivity {
                         invalids = new LinkedList<>();
                         DataExtractor dataExtractor = new DataExtractor(messageHandler);
                         Set<String> emails = dataExtractor.getEmails(sourceLinkText, depth);
-
-                        MessageDispatcher.dispatch(messageHandler, MessageType.EMAILS, String.join("\n", emails));
+                        String emailsString = String.join("\n", emails);
+                        if (emailsString.isEmpty()) {
+                            emailsString = "none";
+                        }
+                        MessageDispatcher.dispatch(messageHandler, MessageType.EMAILS, emailsString);
                     }
                 };
                 processingThread.start();
