@@ -9,6 +9,15 @@ by user, the second level of pages are all page addresses found at the first pag
 ## App origin source link: 
 https://github.com/NikitaHrinko/android_sample_parser
 
+## App build
+
+To build the app run
+```sh
+gradlew assembleDebug
+```
+from the terminal open at the root directory of the project. Then move the `.apk` file at the following relative path:
+> {projectDir}/app/build/outputs/apk/debug/app-debug.apk
+
 ## Project structure description:
 
 Project contains 5 packages: 
@@ -37,7 +46,7 @@ the app main page, list for invalid links that couldn't be processed by the app,
 thread, as well as releasing processing thread when it's done (by receiving message after it 
 ends). `messageHandler` can't be made a static class (as AndroidStudio IDE suggests) because 
 this object is bound to the single instance of `MainActivity` class and must have access to 
-it's fields to modify information on the screen. 
+its fields to modify information on the screen. 
 
 2. Class methods
 
@@ -56,7 +65,7 @@ to be processed is unknown because of the fact that every page on current level 
 and processed to find links to other pages, and when it's done, all located links have to be 
 processed the same way. This process repeats before it reaches the deepest level possible (1-5, 
 based on user input). Afterwards every page concatenated in the same list is sent to find all 
-the emails. The first process takes up most of the processing time due to the fact that reading 
+the emails. The first process takes up most of the processing time because reading 
 pages from the internet is almost always slower than the phone can process this text.
 
 ### `MessageDispatcher` class
@@ -75,7 +84,7 @@ Class methods:
 
 1. `getFullTesxt` - gets visited links, currently processed page link and depth level. This is 
 a recursive procedure that stops when current depth reaches 0. If currently processed page was 
-already visited (may happen due to the fact that pages have links to one-another) it doesn't 
+already visited (may happen because pages have links to one-another) it doesn't 
 process it, otherwise it reads this page and concatenates reading result with result of the 
 same process on every page from links listed on this one. As a result, it returns list with 
 every line of every page that has to be processed.
