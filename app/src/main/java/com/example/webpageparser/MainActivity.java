@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.example.webpageparser.interaction.MessageDispatcher;
 import com.example.webpageparser.interaction.MessageType;
 import com.example.webpageparser.parser.DataExtractor;
+import com.example.webpageparser.reader.SourceTextReader;
 
 import java.util.LinkedList;
 import java.util.Set;
@@ -112,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                         MessageDispatcher.dispatch(messageHandler, MessageType.PROGRESS_PERCENTAGE, 0.0f);
                         MessageDispatcher.dispatch(messageHandler, MessageType.PROGRESS_STATUS, "");
                         invalids = new LinkedList<>();
-                        DataExtractor dataExtractor = new DataExtractor(messageHandler);
+                        DataExtractor dataExtractor = new DataExtractor(messageHandler, new SourceTextReader());
                         Set<String> emails = dataExtractor.getEmails(sourceLinkText, depth);
                         String emailsString = String.join("\n", emails);
                         if (emailsString.isEmpty()) {

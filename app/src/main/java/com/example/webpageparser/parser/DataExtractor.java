@@ -21,9 +21,11 @@ import java.util.stream.Stream;
 public class DataExtractor {
 
     private Handler messageHandler;
+    private SourceTextReader reader;
 
-    public DataExtractor(Handler messageHandler) {
+    public DataExtractor(Handler messageHandler, SourceTextReader reader) {
         this.messageHandler = Objects.requireNonNull(messageHandler);
+        this.reader = Objects.requireNonNull(reader);
     }
 
     private List<String> getFullText(Set<String> visitedLinks, String source, int depthLevel) {
@@ -32,7 +34,6 @@ public class DataExtractor {
         }
         visitedLinks.add(source);
 
-        SourceTextReader reader = new SourceTextReader();
         TextParser parser = new TextParser();
 
         List<String> currentPageText;
